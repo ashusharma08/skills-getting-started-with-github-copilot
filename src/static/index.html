@@ -47,9 +47,9 @@
           <p>Description of the activity.</p>
           <div class="participants">
             <strong>Participants:</strong>
-            <ul>
-              <li>Participant 1</li>
-              <li>Participant 2</li>
+            <ul id="participants-list">
+              <li>Participant 1 <span class="delete-icon" onclick="unregisterParticipant('Participant 1')">🗑️</span></li>
+              <li>Participant 2 <span class="delete-icon" onclick="unregisterParticipant('Participant 2')">🗑️</span></li>
               <!-- More participants will be dynamically added here -->
             </ul>
           </div>
@@ -62,5 +62,11 @@
     </footer>
 
     <script src="app.js"></script>
+    <script>
+      function unregisterParticipant(participant) {
+          // Logic to unregister the participant
+          console.log(participant + ' has been unregistered.');
+      }
+    </script>
   </body>
 </html>

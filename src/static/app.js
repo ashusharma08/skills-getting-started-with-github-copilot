@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="participants">
             <strong>Participants:</strong>
             <ul>
-              ${details.participants.map(participant => `<li>${participant}</li>`).join('')}
+              ${details.participants.map(participant => `<li>${participant} <span class="delete-icon" data-activity="${encodeURIComponent(name)}" data-email="${encodeURIComponent(participant)}">🗑️</span></li>`).join('')}
             </ul>
           </div>
         `;
@@ -89,4 +89,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize app
   fetchActivities();
+  
+  // Delegate click for delete icons
+  activitiesList.addEventListener('click', async (e) => {
+    const el = e.target.closest('.delete-icon');
+    if (!el) return;
+
+    const activityName = decodeURIComponent(el.dataset.activity);
+    const email = decodeURIComponent(el.dataset.email);
+
+    try {
+      const response = await fetch(`/activities/${encodeURIComponent(activityName)}/unregister?email=${encodeURIComponent(email)}`, {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        const payload = await response.json();
+        throw new Error(payload.detail || 'Failed to unregister');
+      }
+
+      // On success, remove the list item from the DOM
+      const li = el.closest('li');
+      if (li) li.remove();
+    } catch (err) {
+      console.error('Error unregistering:', err);
+      alert('Could not unregister participant: ' + err.message);
+    }
+  });
 });
